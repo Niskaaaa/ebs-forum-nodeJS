@@ -5,12 +5,15 @@ const koaBody = require("koa-body");
 const app = new Koa();
 const router = new Router();
 
+router.prefix('/api')
 router.get("/", (ctx) => {
   console.log(ctx);
   ctx.body = "Hello World";
 });
 
 router.get("/api", (ctx) => {
+  const params = ctx.request.query
+  console.log(params.name)
   console.log(ctx);
   ctx.body = "Hello api";
 });
@@ -24,9 +27,12 @@ router.get("/async", async (ctx) => {
 });
 
 router.post("/post", async (ctx) => {
-  console.log(ctx)
+  let{body} = ctx.request;
+  console.log(body)
+  ctx.body={...body}
 });
-
+app.use(koaBody())
+app.use(cors())
 app.use(router.routes()).use(router.allowedMethods());
 
 app.listen(3000);
